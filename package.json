@@ -1,0 +1,23 @@
+{
+  "name": "swapi-test",
+  "version": "1.0.0",
+  "description": "This tool allows you to query some of the data from the Star Wars api at swapi.co",
+  "main": "sw",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nemonocerater/swapi-test.git"
+  },
+  "author": "Nemonocerater",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nemonocerater/swapi-test/issues"
+  },
+  "homepage": "https://github.com/Nemonocerater/swapi-test#readme",
+  "dependencies": {
+    "args": "^5.0.1",
+    "axios": "^0.18.0"
+  }
+}
