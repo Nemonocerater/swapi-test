@@ -1,7 +1,7 @@
 
 # Star Wars CLI
 
-This tool allows you to query some of the data from the Star Wars api at swapi.co
+This tool allows you to query some of the data from the [Star Wars API](https://swapi.co/)
 
 ## How to run
 
