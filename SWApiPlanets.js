@@ -32,18 +32,7 @@ module.exports = class SWApiPlanets extends SWApi {
         console.log(foundPlanet.name, "[" + readablePopulation(foundPlanet) + " people]");
         allData.map(personRsp => {
           var person = personRsp.data;
-          console.log("\t", person.name);
-          (person.gender === "n/a")
-            ? null : console.log("\t\t", person.gender);
-          console.log("\t\t", "Birth year:", person.birth_year);
-          (person.height === "unknown")
-            ? null : console.log("\t\t", person.height, "cm");
-          (person.mass === "unknown")
-            ? null : console.log("\t\t", person.mass, "Kg");
-          (person.hair_color === "none" || person.hair_color === "n/a")
-            ? null : console.log("\t\t", person.hair_color, "hair");
-          console.log("\t\t", person.eye_color, "eyes");
-          console.log("\t\t", person.skin_color, "skin");
+          printPerson(person);
         });
       })
       .catch(error => {
@@ -51,6 +40,21 @@ module.exports = class SWApiPlanets extends SWApi {
       });
     });
   }
+}
+
+function printPerson(person) {
+  console.log("\t", person.name);
+  (person.gender === "n/a")
+    ? null : console.log("\t\t", person.gender);
+  console.log("\t\t", "Birth year:", person.birth_year);
+  (person.height === "unknown")
+    ? null : console.log("\t\t", person.height, "cm");
+  (person.mass === "unknown")
+    ? null : console.log("\t\t", person.mass, "Kg");
+  (person.hair_color === "none" || person.hair_color === "n/a")
+    ? null : console.log("\t\t", person.hair_color, "hair");
+  console.log("\t\t", person.eye_color, "eyes");
+  console.log("\t\t", person.skin_color, "skin");
 }
 
 function readablePopulation(planet) {
