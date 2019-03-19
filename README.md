@@ -3,6 +3,8 @@
 
 This tool allows you to query some of the data from the [Star Wars API](https://swapi.co/)
 
+See the branch async/await for how to handle this using that pattern.
+
 ## How to run
 
 ```bash
