@@ -10,35 +10,40 @@ module.exports = class SWApiPlanets extends SWApi {
     super("https://swapi.co/api/planets/");
   }
 
-  queryAndPrint() {
-    this.queryAll(this.printPlanets.bind(this));
-  }
+  async queryAndPrint() {
+    try {
+      await this.queryAll()
 
-  printPlanets() {
-    console.log("PLANET\t\t\t POPULATION");
-    console.log("------\t\t\t ----------");
+      console.log("PLANET\t\t\t POPULATION");
+      console.log("------\t\t\t ----------");
 
-    this.objects.forEach(planet => {
-      console.log(planet.name, getTabbing(planet.name), readablePopulation(planet));
-    });
-  }
-
-  find(name) {
-    super.find(planet => {
-      return planet.name === name;
-    }, foundPlanet => {
-      Promise.all(foundPlanet.residents.map(url => axios.get(url)))
-      .then(allData => {
-        console.log(foundPlanet.name, "[" + readablePopulation(foundPlanet) + " people]");
-        allData.map(personRsp => {
-          var person = personRsp.data;
-          printPerson(person);
-        });
-      })
-      .catch(error => {
-        printAxiosError("Error fetching people for planet", error);
+      this.objects.forEach(planet => {
+        console.log(planet.name, getTabbing(planet.name), readablePopulation(planet));
       });
-    });
+    } catch (e) {
+      printAxiosError(e);
+    }
+  }
+
+  async find(name) {
+    try {
+      let foundPlanet = await super.find(planet => {
+        return planet.name === name;
+      })
+
+      let allData = await Promise.all(foundPlanet.residents.map(url => axios.get(url)));
+
+      let pop = readablePopulation(foundPlanet);
+      let popStr = pop === "unknown" ? pop + " population" : pop + " people";
+      console.log(foundPlanet.name, "[" + popStr + "]");
+
+      allData.map(personRsp => {
+        let person = personRsp.data;
+        printPerson(person);
+      });
+    } catch (e) {
+      console.error("Error finding planet");
+    }
   }
 }
 

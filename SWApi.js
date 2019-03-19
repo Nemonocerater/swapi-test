@@ -9,54 +9,48 @@ module.exports = class SWApi {
     this.objects = [];
   }
 
-  queryAll(cb) {
-    this.querySwapi(this.startApi, cb);
-  }
+  async queryAll() {
+    let link = this.startApi;
 
-  querySwapi(link, cb) {
-    axios.get(link)
-      .then(rsp => {
-        rsp.data.results.forEach(p => {
-          this.objects.push(p);
-        });
-
-        if (rsp.data.next) {
-          this.querySwapi(rsp.data.next, cb);
-        } else if (cb) {
-          cb();
-        }
-      })
-      .catch(error => {
-        printAxiosError("Error fetching " + link, error);
-        process.exit();
+    while (link) {
+      let rsp = await axios.get(link);
+      rsp.data.results.forEach(p => {
+        this.objects.push(p);
       });
+
+      link = null;
+      if (rsp.data.next) {
+        link = rsp.data.next;
+      }
+    }
   }
 
-  find(comp, isFound) {
-    this.findInSwapi(this.startApi, comp, isFound);
-  }
-
-  findInSwapi(link, comp, isFound) {
+  async find(comp) {
     if (this.objects.length > 0) {
       return findInArray(this.objects, comp);
     }
 
-    axios.get(link)
-      .then(rsp => {
+    try {
+      let link = this.startApi;
+      while (link) {
+        let rsp = await axios.get(link);
         let obj = findInArray(rsp.data.results, comp);
 
         if (obj !== null) {
-          isFound(obj);
-        } else if (rsp.data.next) {
-          this.findInSwapi(rsp.data.next, comp, isFound);
-        } else {
-          isFound(null);
+          return obj;
         }
-      })
-      .catch(error => {
-        printAxiosError("Error finding at " + link, error);
-        process.exit();
-      });
+
+        link = null;
+        if (rsp.data.next) {
+          link = rsp.data.next;
+        }
+      }
+    } catch (e) {
+      printAxiosError(e);
+      throw e;
+    }
+
+    return null;
   }
 }
 

@@ -3,7 +3,7 @@ var axios = require('axios');
 
 var SWApi = require('./SWApi');
 
-var { getTabbing } = require('./helpers');
+var { getTabbing, printAxiosError } = require('./helpers');
 
 module.exports = class SWApiPlanets extends SWApi {
   constructor() {
@@ -11,17 +11,15 @@ module.exports = class SWApiPlanets extends SWApi {
   }
 
   queryAndPrint() {
-    this.queryAll(this.printPeople.bind(this));
-  }
+    this.queryAll()
+      .then(() => {
+        console.log("PERSON\t\t\t GENDER");
+        console.log("------\t\t\t ------");
 
-  printPeople() {
-    console.log("PERSON\t\t\t GENDER");
-    console.log("------\t\t\t ------");
-
-    this.objects.forEach(person => {
-      //console.log(person);
-      console.log(person.name, getTabbing(person.name), person.gender);
-      //console.log(planet.name, getTabbing(planet.name), readablePopulation(planet));
-    });
+        this.objects.forEach(person => {
+          console.log(person.name, getTabbing(person.name), person.gender);
+        });
+      })
+      .catch(printAxiosError);
   }
 }

@@ -27,11 +27,12 @@ module.exports.getTabbing = function getTabbing(str) {
   return spacing
 }
 
-module.exports.printAxiosError = function printAxiosError(message, error) {
-  console.error(message);
+module.exports.printAxiosError = function printAxiosError(error) {
   console.error(error.message);
-  console.error(
-    error.response.status + " " + error.response.statusText + " - " +
-    error.request.method + " " + error.request.path
-  );
+  if (error.config && error.config.url) {
+    console.error("Error fetching", error.config.url);
+  } else {
+    console.error(error);
+    console.error("^^^^^ Unhandled Error");
+  }
 }
